@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ETF Impossibility · NeurReps 2026</title>
+  <meta name="description" content="An Impossibility Result for ETF Target Geometry, and an Equinorm Remedy for Imbalanced Analytic Continual Learning. Berk Sezer, NeurReps 2026 (NeurIPS 2026 Workshop).">
+  <meta property="og:title" content="An Impossibility Result for ETF Target Geometry, and an Equinorm Remedy for Imbalanced Analytic Continual Learning">
+  <meta property="og:description" content="Neural-Collapse ETF targets in exact analytic continual learning are provably identical to one-hot targets. What helps is equal weight norms. NeurReps 2026, NeurIPS 2026 Workshop.">
+  <meta property="og:url" content="https://etf-impossibility.github.io/">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <style>
+    /* Poster palette (poster/main.tex). Light by default; the toggle switches to dark,
+       which uses lighter accents. */
+    :root {
+      --bg: #ffffff; --ink: #0b1220; --body: #1f2937; --muted: #5b6472; --line: #e2e8f0; --chip: #f3f4f6;
+      --navy: #16294a; --gold: #f2b134; --tint: #eef3f9;
+      --blue: #2166ac; --green: #1b7837; --red: #b2182b;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: "JetBrains Mono", Menlo, monospace;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0d1b2a; --ink: #ffffff; --body: #e3eaf2; --muted: #9fb3c8; --line: #1f3347; --chip: #132739;
+      --tint: #132739; --blue: #7cc4ff; --green: #4ade80; --red: #f87171;
+    }
+
+    html { font-size: clamp(16px, 0.45vw + 11px, 19px); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--body); font: 1rem/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    code { font-family: var(--mono); font-size: .88em; padding: .05em .35em; border-radius: .3em; background: var(--chip); border: 1px solid var(--line); color: var(--ink); }
+    .page { max-width: 52rem; margin: 0 auto; padding: 1.5rem 1.25rem 3.5rem; }
+    .katex { font-size: 1.08em; }
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: .2rem 0; margin: .6rem 0; }
+
+    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .back { color: var(--muted); font-weight: 600; font-size: .95rem; text-decoration: none; }
+    .back:hover { color: var(--ink); }
+    #theme { width: 1rem; height: 1rem; border-radius: 50%; border: 1.5px solid var(--muted); padding: 0; cursor: pointer;
+      background: linear-gradient(90deg, var(--muted) 50%, transparent 50%); }
+
+    /* header band: navy with a gold rule, as on the poster */
+    .hero { background: #16294a; color: #fff; border-radius: 1.25rem; overflow: hidden; border-bottom: 5px solid var(--gold); padding: 2.2rem 2.4rem 2rem; }
+    .venue { margin: 0 0 .9rem; color: var(--gold); font-weight: 700; font-size: .9rem; letter-spacing: .01em; }
+    .hero h1 { margin: 0; font-size: 2.15rem; line-height: 1.18; letter-spacing: -.03em; font-weight: 700; }
+    .author { margin: 1.1rem 0 0; font-size: 1.05rem; color: #d6e0ec; }
+    .author b { color: #fff; font-weight: 650; }
+    .author a { text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.35); }
+    .author a:hover { border-color: #fff; }
+    .links { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.5rem; }
+    .links a { display: inline-flex; align-items: center; gap: .45rem; padding: .45rem 1.05rem; border-radius: 999px; background: #fff; color: #16294a;
+      font-weight: 600; font-size: .95rem; text-decoration: none; transition: opacity .15s; }
+    .links a:hover { opacity: .85; }
+    .links svg { width: 1.05rem; height: 1.05rem; }
+
+    .callout { margin: 1.4rem 0; padding: 1.2rem 1.5rem; border: 2px solid var(--blue); border-radius: 1rem; background: var(--tint); }
+    .callout.tldr { border-color: var(--gold); background: var(--chip); font-size: 1.08rem; }
+    .callout.green { border-color: var(--green); }
+    .callout p { margin: 0; }
+    .callout p + p { margin-top: .6rem; }
+
+    section { margin-top: 2.6rem; }
+    h2 { display: flex; align-items: center; gap: .8rem; margin: 0 0 .4rem; padding-bottom: .55rem; border-bottom: 1.5px solid var(--line);
+      font-size: 1.45rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; color: var(--ink); }
+    h2 .n { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: #16294a; color: #fff; font-size: 1rem; }
+    :root[data-theme="dark"] h2 .n { background: var(--gold); color: #16294a; }
+    section > p { margin: .8rem 0; }
+    ul { margin: .8rem 0; padding-left: 1.3rem; }
+    li { margin: .35rem 0; }
+    li::marker { color: var(--navy); }
+    :root[data-theme="dark"] li::marker { color: var(--gold); }
+    .muted { color: var(--muted); }
+    .nowrap { white-space: nowrap; }
+    .small { font-size: .9rem; color: var(--muted); }
+    .qa b:last-child { color: var(--red); }
+    .c-green { color: var(--green); }
+    .c-red { color: var(--red); }
+
+    /* Figures are drawn on white, so they sit on a white card in both themes. */
+    figure { margin: 1.1rem 0 0; }
+    figure a { display: block; }
+    figure img { display: block; width: 100%; height: auto; background: #fff; border: 1px solid var(--line); border-radius: .9rem; padding: .6rem; }
+    figcaption { margin-top: .55rem; font-size: .9rem; color: var(--muted); }
+
+    .nest { display: grid; grid-template-columns: 15rem 1fr; gap: 1.5rem; align-items: center; margin: 1rem 0; }
+    .nest svg { width: 100%; height: auto; display: block; }
+    .nest svg text { fill: var(--body); font: 15px var(--sans); }
+
+    .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1rem; }
+    .tile { padding: 1rem .8rem; border-radius: .9rem; background: var(--chip); border: 1px solid var(--line); text-align: center; }
+    .tile .l { display: block; font-size: .88rem; color: var(--muted); }
+    .tile .v { display: block; margin: .15rem 0; color: var(--body); }
+    .tile .v b { color: var(--ink); }
+    .tile .d { display: block; font-size: 1.6rem; font-weight: 700; color: var(--green); line-height: 1.2; }
+    .tile .d.zero { color: var(--muted); }
+
+    .takehome { margin-top: 3rem; padding: 1.8rem 2.2rem 1.6rem; border-radius: 1.25rem; background: #16294a; color: #fff; border-top: 5px solid var(--gold); }
+    .takehome h2 { color: var(--gold); border: 0; padding: 0; margin-bottom: .8rem; }
+    .takehome ol { margin: 0; padding: 0; list-style: none; counter-reset: t; }
+    .takehome li { position: relative; padding-left: 2rem; margin: .55rem 0; font-size: 1.05rem; counter-increment: t; }
+    .takehome li::before { content: counter(t); position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+
+    .refs { margin-top: 1rem; font-size: .85rem; color: var(--muted); }
+    pre { position: relative; margin: .8rem 0 0; padding: 2.4rem 1.2rem 1rem; overflow-x: auto; border-radius: .9rem; background: var(--chip); border: 1px solid var(--line);
+      font: .82rem/1.55 var(--mono); color: var(--ink); }
+    pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+    #copy { position: absolute; top: .6rem; right: .6rem; padding: .2rem .7rem; border-radius: 999px; border: 1px solid var(--line); background: var(--bg);
+      color: var(--muted); font: 600 .78rem var(--sans); cursor: pointer; }
+    #copy:hover { color: var(--ink); border-color: var(--ink); }
+    footer { margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+
+    @media (max-width: 640px) {
+      .page { padding: 1rem 1rem 2.5rem; }
+      .hero { padding: 1.5rem 1.3rem 1.4rem; }
+      .hero h1 { font-size: 1.6rem; }
+      .nest { grid-template-columns: 1fr; }
+      .nest svg { max-width: 15rem; margin: 0 auto; }
+      .tile { padding: .8rem .3rem; }
+      .tile .l, .tile .v { font-size: .78rem; }
+      .tile .d { font-size: 1.25rem; }
+      .callout .katex-display > .katex { font-size: .72em; }
+      .callout { padding: 1rem 1.1rem; }
+      .takehome { padding: 1.4rem 1.3rem; }
+    }
+    @media (max-width: 360px) { .callout .katex-display > .katex { font-size: .62em; } }
+  </style>
+  <script>
+    try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+<main class="page">
+
+  <div class="top">
+    <a class="back" href="https://berksezer9.github.io/">← Berk Sezer</a>
+    <button id="theme" aria-label="Toggle light/dark theme" title="Toggle theme"></button>
+  </div>
+
+  <header class="hero">
+    <p class="venue">NeurReps 2026 · Symmetry and Geometry in Neural Representations · NeurIPS 2026 Workshop</p>
+    <h1>An Impossibility Result for ETF Target Geometry, and an Equinorm Remedy for Imbalanced Analytic Continual Learning</h1>
+    <p class="author"><b><a href="https://berksezer9.github.io/">Berk Sezer</a></b> · Middle East Technical University, Türkiye</p>
+    <nav class="links">
+      <a href="https://arxiv.org/abs/2610.24844"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Paper</a>
+      <a href="https://github.com/berksezer9/etf-targets-acil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>Code</a>
+      <a href="assets/poster.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>Poster</a>
+      <a href="#citation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h4v4c0 3-2 5-4 6M15 7h4v4c0 3-2 5-4 6"/></svg>BibTeX</a>
+    </nav>
+  </header>
+
+  <div class="callout tldr">
+    <p><b>TL;DR</b>&ensp;Neural-Collapse <b>ETF targets</b> in exact <b>analytic continual learning</b> are <em>provably identical</em> to one-hot targets, and the literal “progressively expand the ETF” recipe causes catastrophic forgetting. What helps is <b>equal weight norms</b>: post-hoc <b>equinorm</b> gives <b>+32 tail</b> / <b>+16 average</b> accuracy points at 100&#8239;:&#8239;1 imbalance.</p>
+  </div>
+
+  <section>
+    <h2><span class="n">1</span>Can ETF targets help analytic CL?</h2>
+    <ul>
+      <li><b>Analytic CL</b> (ACIL, GACL): frozen backbone + ridge head $W=(\Phi^\top\Phi+\lambda I)^{-1}\Phi^\top Y$, updated exactly per task by Sherman–Morrison–Woodbury. Exemplar-free.</li>
+      <li><b>ProNC</b>: SGD-trained CL improves with a progressively expanding <b>Simplex ETF</b> target.</li>
+      <li><b>Simplex ETF</b> $A=[a_1,\dots,a_K]$: $\|a_c\|=1$ <em>(equinorm)</em>, $\langle a_c,a_{c'}\rangle=-\tfrac{1}{K-1}$ <em>(equiangular)</em>.</li>
+    </ul>
+    <p class="qa"><b>Q:</b> swap ACIL's one-hot targets for an ETF?&ensp;<b>A: it changes nothing.</b></p>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Theorem: target geometry is invisible</h2>
+    <p>Targets $E=YA^\top$, scores $s_A(x)=\phi^\top W_A\,A$. For any fit linear in its targets (ridge, weighted ridge, ACIL/GACL, RanPAC):</p>
+    <div class="callout">
+      $$s_A(x)=s_{\text{onehot}}(x)\,A^\top A,\qquad A^\top A\overset{\text{ETF}}{=}\tfrac{K}{K-1}I-\tfrac{1}{K-1}\one\one^\top$$
+      $$\Rightarrow\; s_A(x)_c=\underbrace{\tfrac{K}{K-1}}_{>0}\,s_{\text{onehot}}(x)_c\;-\;\underbrace{\tfrac{1}{K-1}\textstyle\sum_{c'}s_{\text{onehot}}(x)_{c'}}_{\text{same for every class}}$$
+      <p><b>Identical argmax</b> for every input, every $m\ge K{-}1$, every $\lambda$, every task, any sample weighting.</p>
+    </div>
+    <p><b>Verified</b> on real features: score gap $&lt;1.1\times10^{-14}$.</p>
+    <p class="muted">Escapes: <b>compressed frames</b> $m&lt;K{-}1$ (no ETF exists; costly, ${\le}\,7.8\%$ accuracy vs. $68.6\%$) or <b>non-linear</b> post-processing of $W$ (<a href="#s4">4</a>).</p>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Simplex ETFs are not nested</h2>
+    <div class="nest">
+      <!-- same vectors as the poster's TikZ drawing (x right, y up; 60 px per unit) -->
+      <svg viewBox="0 0 300 200" role="img" aria-label="Simplex ETF for K=3 and for K=4: no K=3 vertex pair survives">
+        <defs>
+          <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--blue)"/></marker>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--red)"/></marker>
+          <marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker>
+        </defs>
+        <g stroke-width="3" fill="none">
+          <g transform="translate(75 85)">
+            <line x1="0" y1="0" x2="0" y2="-60" stroke="var(--blue)" marker-end="url(#ab)"/>
+            <line x1="0" y1="0" x2="-52" y2="30" stroke="var(--blue)" marker-end="url(#ab)"/>
+            <line x1="0" y1="0" x2="52" y2="30" stroke="var(--muted)" stroke-opacity=".6" marker-end="url(#am)"/>
+          </g>
+          <g transform="translate(225 85)">
+            <line x1="0" y1="0" x2="28.3" y2="2.9" stroke="var(--muted)" stroke-opacity=".6" stroke-dasharray="5 4" marker-end="url(#am)"/>
+            <line x1="0" y1="0" x2="28.3" y2="37.1" stroke="var(--muted)" stroke-opacity=".6" marker-end="url(#am)"/>
+            <line x1="0" y1="0" x2="0" y2="-60" stroke="var(--red)" marker-end="url(#ar)"/>
+            <line x1="0" y1="0" x2="-56.6" y2="20" stroke="var(--red)" marker-end="url(#ar)"/>
+          </g>
+        </g>
+        <text x="75" y="160" text-anchor="middle"><tspan font-style="italic">K</tspan> = 3</text>
+        <text x="75" y="182" text-anchor="middle">cos = −1/2</text>
+        <text x="225" y="160" text-anchor="middle"><tspan font-style="italic">K</tspan> = 4</text>
+        <text x="225" y="182" text-anchor="middle">cos = −1/3</text>
+      </svg>
+      <p><b>Proposition.</b> ETFs for $K$ and $K{+}1$ classes share <b>at most one</b> vertex: any fixed pair's cosine would have to be both $-\tfrac{1}{K-1}$ and <span class="nowrap">$-\tfrac1K$.</span></p>
+    </div>
+    <p>Fused methods must recompute the ETF each task (<code>etf_exact</code> $\equiv$ one-hot) or keep old target blocks in their old frame (<code>etf_stale</code>):</p>
+    <figure>
+      <a href="assets/poster_staleness.svg"><img src="assets/poster_staleness.svg" alt="Accuracy and forgetting over 10 tasks for onehot, etf_exact and etf_stale heads" loading="lazy"></a>
+      <figcaption>CIFAR-100, 10 tasks, ViT-B/16. Staleness alone brings back catastrophic forgetting ($4\times$ that of <code>onehot</code>); same on TinyImageNet and ResNet-50.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s4">
+    <h2><span class="n">4</span>Split the ETF, apply it to $W$</h2>
+    <p>Targets are inert, so impose each ETF property on the <em>fitted weights</em>, a non-linear map outside the theorem:</p>
+    <ul>
+      <li><b class="c-green">equinorm</b>: equalize column norms of $W$, keep its angles. ($\tau$-normalization with $\tau{=}1$, Kang et al.; new here: in analytic CL, split from equiangularity.)</li>
+      <li><b class="c-red">equiangular</b>: set all pairwise cosines to $-\tfrac{1}{K-1}$, keep its norms.</li>
+    </ul>
+    <div class="callout green">
+      <p><b>Why norms?</b> From $r=1$ to $100$, the norm ratio $\|w\|_{\max}/\|w\|_{\min}$ of the fitted $W$ grows <b>5.2&#8239;→&#8239;43.7</b>; the spread of its cosines barely moves (0.72&#8239;→&#8239;0.78). Imbalance lives in the norms.</p>
+    </div>
+    <p class="small"><b>Setup.</b> Frozen ViT-B/16 and ResNet-50; CIFAR-100 and TinyImageNet, 10 tasks. Long tail: exponential per-class budget, head&#8239;:&#8239;tail ratio $r$. 5 seeds; all heads fit in lockstep on identical features.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>Equinorm rescues the long tail</h2>
+    <figure>
+      <a href="assets/poster_sweep.svg"><img src="assets/poster_sweep.svg" alt="Tail, average and head accuracy versus imbalance ratio r for onehot, equinorm and equiangular heads" loading="lazy"></a>
+    </figure>
+    <div class="tiles">
+      <div class="tile"><span class="l">tail classes</span><span class="v">7.2% → <b>39.2%</b></span><span class="d">+32.0</span></div>
+      <div class="tile"><span class="l">all classes</span><span class="v">37.5% → <b>53.5%</b></span><span class="d">+16.0</span></div>
+      <div class="tile"><span class="l">head classes</span><span class="v">67.8% → <b>67.8%</b></span><span class="d zero">≈&#8239;0</span></div>
+    </div>
+    <p class="small">CIFAR-100/ViT, mean $\pm$ s.d. over 5 seeds; tiles at $r=100$ (onehot → equinorm). Cost near balance: $-5.4$ points at $r=1$, $-3.4$ at $r=2$.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>It transfers; equiangularity hurts</h2>
+    <figure>
+      <a href="assets/poster_transfer.svg"><img src="assets/poster_transfer.svg" alt="Equinorm and equiangular gains over onehot for two backbones and two datasets" loading="lazy"></a>
+      <figcaption>Equinorm helps in all four backbone × dataset cells; equiangular falls below <code>onehot</code> in all four.</figcaption>
+    </figure>
+  </section>
+
+  <div class="takehome">
+    <h2>Take-home</h2>
+    <ol>
+      <li>ETF targets in analytic CL are <b>provably identical</b> to one-hot targets.</li>
+      <li>The literal progressive-ETF recipe leaves <b>stale targets</b>, which bring back catastrophic forgetting.</li>
+      <li>The useful half of Neural-Collapse geometry is <b>equinorm on the weights</b>; equiangularity is at best inert, usually harmful.</li>
+    </ol>
+  </div>
+
+  <p class="refs">ACIL: Zhuang et al., NeurIPS 2022 · GACL: Zhuang et al., NeurIPS 2024 · ProNC: Wang et al., ICLR 2026 · Neural Collapse: Papyan et al., PNAS 2020 · RanPAC: McDonnell et al., NeurIPS 2023 · $\tau$-norm: Kang et al., ICLR 2020</p>
+
+  <section id="citation">
+    <h2>Citation</h2>
+    <pre><button id="copy" type="button">Copy</button><code id="bib">@misc{sezer2026impossibilityresultetftarget,
+      title={An Impossibility Result for ETF Target Geometry, and an Equinorm Remedy for Imbalanced Analytic Continual Learning},
+      author={Berk Sezer},
+      year={2026},
+      eprint={2610.24844},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      note={Accepted at the NeurReps 2026 Workshop (Extended Abstract Track), NeurIPS 2026},
+      url={https://arxiv.org/abs/2610.24844},
+}</code></pre>
+  </section>
+
+  <footer>Contact: <a href="mailto:berk.sezer@metu.edu.tr">berk.sezer@metu.edu.tr</a></footer>
+
+</main>
+
+<script>
+  document.getElementById('theme').addEventListener('click', function () {
+    var root = document.documentElement;
+    var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+  document.getElementById('copy').addEventListener('click', function () {
+    var b = this;
+    navigator.clipboard.writeText(document.getElementById('bib').textContent).then(function () {
+      b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    renderMathInElement(document.body, {
+      delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }],
+      ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      macros: { '\\one': '\\mathbf{1}', '\\R': '\\mathbb{R}' }
+    });
+  });
+</script>
+</body>
+</html>
