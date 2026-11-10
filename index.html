@@ -78,6 +78,7 @@
     .muted { color: var(--muted); }
     .nowrap { white-space: nowrap; }
     .small { font-size: .9rem; color: var(--muted); }
+    .qa b:first-child { color: var(--blue); }
     .qa b:last-child { color: var(--red); }
     .c-green { color: var(--green); }
     .c-red { color: var(--red); }
@@ -129,7 +130,8 @@
       .takehome { padding: 1.4rem 1.3rem; }
     }
     @media (max-width: 360px) { .callout .katex-display > .katex { font-size: .62em; } }
-  </style>
+    .cite { color: var(--muted, #5B6472); }
+</style>
   <script>
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
@@ -160,16 +162,16 @@
   <section>
     <h2><span class="n">1</span>Can ETF targets help analytic CL?</h2>
     <ul>
-      <li><b>Analytic CL</b> (ACIL, GACL): frozen backbone + ridge head $W=(\Phi^\top\Phi+\lambda I)^{-1}\Phi^\top Y$, updated exactly per task by Sherman–Morrison–Woodbury. Exemplar-free.</li>
-      <li><b>ProNC</b>: SGD-trained CL improves with a progressively expanding <b>Simplex ETF</b> target.</li>
-      <li><b>Simplex ETF</b> $A=[a_1,\dots,a_K]$: $\|a_c\|=1$ <em>(equinorm)</em>, $\langle a_c,a_{c'}\rangle=-\tfrac{1}{K-1}$ <em>(equiangular)</em>.</li>
+      <li><b>Analytic CL</b> (ACIL&thinsp;<span class="cite">[1]</span>, GACL&thinsp;<span class="cite">[2]</span>): frozen backbone + ridge head $W=(\Phi^\top\Phi+\lambda I)^{-1}\Phi^\top Y$, updated exactly per task by Sherman–Morrison–Woodbury. Exemplar-free.</li>
+      <li><b>ProNC</b>&thinsp;<span class="cite">[3]</span>: SGD-trained CL improves with a progressively expanding <b>Simplex ETF</b> target.</li>
+      <li><b>Simplex ETF</b>&thinsp;<span class="cite">[4]</span> $A=[a_1,\dots,a_K]$: $\|a_c\|=1$ <em>(equinorm)</em>, $\langle a_c,a_{c'}\rangle=-\tfrac{1}{K-1}$ <em>(equiangular)</em>.</li>
     </ul>
-    <p class="qa"><b>Q:</b> swap ACIL's one-hot targets for an ETF?&ensp;<b>A: it changes nothing.</b></p>
+    <p class="qa"><b>Q: swap ACIL's one-hot targets for an ETF?</b>&ensp;<b>A: it changes nothing.</b></p>
   </section>
 
   <section>
     <h2><span class="n">2</span>Theorem: target geometry is invisible</h2>
-    <p>Targets $E=YA^\top$, scores $s_A(x)=\phi^\top W_A\,A$. For any fit linear in its targets (ridge, weighted ridge, ACIL/GACL, RanPAC):</p>
+    <p>Targets $E=YA^\top$, scores $s_A(x)=\phi^\top W_A\,A$. For any fit linear in its targets (ridge, weighted ridge, ACIL/GACL, RanPAC&thinsp;<span class="cite">[5]</span>):</p>
     <div class="callout">
       $$s_A(x)=s_{\text{onehot}}(x)\,A^\top A,\qquad A^\top A\overset{\text{ETF}}{=}\tfrac{K}{K-1}I-\tfrac{1}{K-1}\one\one^\top$$
       $$\Rightarrow\; s_A(x)_c=\underbrace{\tfrac{K}{K-1}}_{>0}\,s_{\text{onehot}}(x)_c\;-\;\underbrace{\tfrac{1}{K-1}\textstyle\sum_{c'}s_{\text{onehot}}(x)_{c'}}_{\text{same for every class}}$$
@@ -220,7 +222,7 @@
     <h2><span class="n">4</span>Split the ETF, apply it to $W$</h2>
     <p>Targets are inert, so impose each ETF property on the <em>fitted weights</em>, a non-linear map outside the theorem:</p>
     <ul>
-      <li><b class="c-green">equinorm</b>: equalize column norms of $W$, keep its angles. ($\tau$-normalization with $\tau{=}1$, Kang et al.; new here: in analytic CL, split from equiangularity.)</li>
+      <li><b class="c-green">equinorm</b>: equalize column norms of $W$, keep its angles. ($\tau$-normalization&thinsp;<span class="cite">[6]</span> with $\tau{=}1$; new here: in analytic CL, split from equiangularity.)</li>
       <li><b class="c-red">equiangular</b>: set all pairwise cosines to $-\tfrac{1}{K-1}$, keep its norms.</li>
     </ul>
     <div class="callout green">
@@ -243,7 +245,7 @@
   </section>
 
   <section>
-    <h2><span class="n">6</span>It transfers; equiangularity hurts</h2>
+    <h2><span class="n">6</span>Equinorm transfers; equiangularity hurts</h2>
     <figure>
       <a href="assets/poster_transfer.svg"><img src="assets/poster_transfer.svg" alt="Equinorm and equiangular gains over onehot for two backbones and two datasets" loading="lazy"></a>
       <figcaption>Equinorm helps in all four backbone × dataset cells; equiangular falls below <code>onehot</code> in all four.</figcaption>
@@ -259,7 +261,7 @@
     </ol>
   </div>
 
-  <p class="refs">ACIL: Zhuang et al., NeurIPS 2022 · GACL: Zhuang et al., NeurIPS 2024 · ProNC: Wang et al., ICLR 2026 · Neural Collapse: Papyan et al., PNAS 2020 · RanPAC: McDonnell et al., NeurIPS 2023 · $\tau$-norm: Kang et al., ICLR 2020</p>
+  <p class="refs"><b>References</b>&ensp; [1]&nbsp;H.&nbsp;Zhuang et al. ACIL: Analytic class-incremental learning with absolute memorization and privacy protection. NeurIPS 2022.&ensp; [2]&nbsp;H.&nbsp;Zhuang et al. GACL: Exemplar-free generalized analytic continual learning. NeurIPS 2024.&ensp; [3]&nbsp;Z.&nbsp;Wang, W.&nbsp;Yu, L.&nbsp;Yang, S.&nbsp;Lin. Rethinking continual learning with progressive neural collapse. ICLR 2026.&ensp; [4]&nbsp;V.&nbsp;Papyan, X.&nbsp;Y.&nbsp;Han, D.&nbsp;L.&nbsp;Donoho. Prevalence of neural collapse during the terminal phase of deep learning training. PNAS 2020.&ensp; [5]&nbsp;M.&nbsp;D.&nbsp;McDonnell et al. RanPAC: Random projections and pre-trained models for continual learning. NeurIPS 2023.&ensp; [6]&nbsp;B.&nbsp;Kang et al. Decoupling representation and classifier for long-tailed recognition. ICLR 2020.</p>
 
   <section id="citation">
     <h2>Citation</h2>
